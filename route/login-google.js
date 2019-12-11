@@ -38,7 +38,7 @@ passport.use(new GoogleStrategy(
       .populate({ path: 'usersRequest', select: ['username'] })
       .populate({ path: 'guestRequest', select: ['username'] })
       .populate({ path: 'friends', select: ['articles', 'username'] })
-      .then((result) => {
+      .then( async (result) => {
         if (result) {
           console.log('\nUser da tung dang nhap.');
           done(null, result)
@@ -46,6 +46,7 @@ passport.use(new GoogleStrategy(
         } else {
           console.log('\nUser moi');
           let newUser = new USERS_MODEL({ username: profile._json.family_name, pwd: 123, email: profile._json.email });
+          await newUser.save();
           // console.log({newUser});
           done(null, newUser)
         }
