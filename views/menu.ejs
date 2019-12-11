@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Theme Made By www.w3schools.com - No Copyright -->
+  <title>Bootstrap Theme Simply Me</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      font: 20px Montserrat, sans-serif;
+      line-height: 1.8;
+      color: #f5f6f7;
+    }
+
+    p {
+      font-size: 16px;
+    }
+
+    .margin {
+      margin-bottom: 45px;
+    }
+
+    .bg-1 {
+      background-color: #1abc9c;
+      /* Green */
+      color: #ffffff;
+    }
+
+    .bg-2 {
+      background-color: #474e5d;
+      /* Dark Blue */
+      color: #ffffff;
+    }
+
+    .bg-3 {
+      background-color: #ffffff;
+      /* White */
+      color: #555555;
+    }
+
+    .bg-4 {
+      background-color: #2f2f2f;
+      /* Black Gray */
+      color: #fff;
+    }
+
+    .container-fluid {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+
+    .navbar {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border: 0;
+      border-radius: 0;
+      margin-bottom: 0;
+      font-size: 12px;
+      letter-spacing: 5px;
+    }
+
+    .navbar-nav li a:hover {
+      color: #1abc9c !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand">ABOUT ME</a>
+
+        <a href="/log-out" class="btn btn-info btn-lg">
+          <span class="glyphicon glyphicon-log-out"></span>
+        </a>
+
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+      </div>
+  </nav>
+
+  <div class="container-fluid bg-1 text-center">
+    <h1 class="margin">SOCIAL NETWORK</h1>
+    <h3>Hello <%=info.username%></h3>
+  </div>
+
+  <div class="container-fluid bg-3 text-center">
+
+
+    <h3 class="margin">What new to day?</h3>
+    <div class="row">
+
+      <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">Create
+        New Artictle</button>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Request <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <%if(info.guestRequest && info.guestRequest.length > 0){ %>
+          <%info.guestRequest.forEach(user => { %>
+          <li style="display:flex;">
+            <div class="row">
+              <h5 class="col-sm-4"><%= user.username %></h5>
+              <a href="/accept-request/<%=user._id%>" class="col-sm-5"><button
+                  class="btn btn-primary">Accep</button></a>
+              <a href="/remove-request/<%=user._id%>" class="col-sm-2"><button
+                  class="btn btn-danger">Cancel</button></a>
+            </div>
+          </li>
+          <% })}else{ %>
+          <li>Nothing</li>
+          <% } %>
+        </ul>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          New Friends <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+
+          <% let strOldAdd = info.usersRequest.reduce((backVal, thisVal) => {%>
+          <%return backVal + '_' + thisVal._id.toString(); %>
+          <%}, '')%>
+          <%if(newFriend && newFriend.length > 0){ %>
+          <%newFriend.forEach(user => { %>
+          <li style="display:flex;">
+            <div class="row">
+              <h5 class="col-sm-6"><%= user.username %></h5>
+              <%if(strOldAdd.includes(user.id)){ %>
+              <a href="/remove-add-friend/<%=user._id%>" class="col-sm-4"><button
+                  class="btn btn-danger">Cancel</button></a>
+              <% }else { %>
+              <a href="/add-friend/<%=user._id%>" class="col-sm-4"><button class="btn btn-primary">Add
+                  Friend</button></a>
+              <% } %>
+            </div>
+          </li>
+          <% })}else{ %>
+          <li>Nothing</li>
+          <% } %>
+        </ul>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          Friends <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+          <%if(info.friends && info.friends.length > 0){ %>
+          <%info.friends.forEach(user => { %>
+          <li style="display:flex;">
+            <div class="row">
+              <h5 class="col-sm-4"><%= user.username %></h5>
+              <a href="/delete-friend/<%=user._id%>" class="col-sm-2"><button class="btn btn-danger">Delete</button></a>
+            </div>
+          </li>
+          <% })}else{ %>
+          <li>Let's find some one!</li>
+          <% } %>
+        </ul>
+      </div>
+
+      <div id="demo" class="collapse">
+        <div id="demo" class="container">
+          <br>
+          <form class="form-horizontal" method="post" action="/article">
+
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <input class="form-control" id="text" name="title" type="text" placeholder="Title" />
+              </div>
+            </div>
+
+            <div class="form-group form-group-lg">
+              <div class="col-sm-12">
+                <textarea class="form-control" cols="40" id="textarea" name="content" rows="10"
+                  placeholder="Content"></textarea>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block outline" name="submit" type="submit">
+              Create
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid bg-2 text-center">
+    <h1 class="margin">News</h1>
+
+    <ul class="list-group bg-3">
+
+      <%if(arrArticle && arrArticle.length > 0){%>
+        <%arrArticle.forEach(item => {%>
+          <li class="list-group-item">
+              <div class="panel-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading"><strong><%= item.titles %></strong></div>
+                  <div class="panel-body"><%= item.contents %></div>
+                  <h5 class="panel-heading">Author: <%=item.authors.username%> ----- Create at: <%= item.createAt%></h5>
+                </div>
+            </li>
+            <div class="bg-2"><br></div>
+         <%})}%>
+    </ul>
+
+  </div>
+
+</body>
+
+</html>
